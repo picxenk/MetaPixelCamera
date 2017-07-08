@@ -9,12 +9,6 @@ var dateFormat = require('dateformat');
 
 var state = 'READY';
 var camOptions = config.camOptions;
-// var camOptions = ["-vf", 
-// 	"-w", "1000", "-h", "1000", 
-// 	"-q", "100", "-t", "250",
-// 	"-o"] 
-// var scpOptions = ["picxenk@192.168.0.17:./MPScreenServer/MPCams/1/"];
-// var scpOptions = ["picxenk@222.121.149.230:./MPScreenServer/MPCams/1/"];
 var scpOptions = [config.MPScreenServerUser+"@"
     +config.MPScreenServerIP+":"
     +"./MPScreenServer/MPCams/"
@@ -37,7 +31,6 @@ button.watch(function(err, value) {
         console.log('cam done '+fileName);
 
         shotProc.on('close', (code) => {
-            // scpProc = spawn('scp', [fileName].concat(scpOptions));
             exec("scp "+fileName+" "+scpOptions[0], (err, sto, ste) => {
                 if (err) {
                     console.error(`${err}`);
@@ -45,9 +38,6 @@ button.watch(function(err, value) {
                 }
             });
             console.log('scp done '+fileName);
-            // scpProc.stderr.on('data', (data) => {
-            //     console.log(`err : ${data}`);
-            // });
         });
 
     }
