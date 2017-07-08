@@ -6,13 +6,46 @@
     <script src="mpimage.js"></script>
     <!-- <script src="sketch.js"></script> -->
     <script>
-var setup = function() {
-    createCanvas(1000, 1000);
-    noLoop();
+function getQueryVariable(variable) {
+    var query = window.location.search.substring(1);
+    var vars = query.split("&");
+    for (var i=0;i<vars.length;i++) {
+        var pair = vars[i].split("=");
+        if(pair[0] == variable){return pair[1];}
+    }
+    return(false);
 }
+
+var img;
+var mpi;
+var preload = function() {
+    var fileName = getQueryVariable("img");
+
+    if (fileName) {
+        img = loadImage("/img/"+fileName);
+    } else {
+        img = loadImage("frogcam_540.jpg");
+    }
+}
+
+
+var setup = function() {
+    pixelDensity(1);
+    createCanvas(960, 540);
+    noLoop();
+    background(0);
+    mpi = new MPImage(img);
+    mpi.updateMetaPixels();
+    // mpi.do02();
+    mpi.do01();
+    mpi.processMPImage();
+    image(mpi.pg, 0, 0);
+}
+
 
 var draw = function() {
 }
+
     </script>
   <style> body {padding: 0; margin: 0;} </style>
   </head>
