@@ -36,7 +36,7 @@ button.watch(function(err, value) {
 
     
     if (value == 1) {
-        fileName = makeTimeString()+".jpg";
+        fileName = "./public_html/img/"+makeTimeString()+".jpg";
         shotProc = spawn('raspistill', camOptions.concat(fileName));
         console.log('cam done '+fileName);
 
