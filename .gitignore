@@ -57,5 +57,7 @@ typings/
 # dotenv environment variables file
 .env
 
-# MetaPixelCamera configuration
+# MetaPixelCamera ignore
 config.js
+*.jpg
+*.png
