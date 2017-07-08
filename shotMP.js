@@ -16,7 +16,7 @@ var camOptions = config.camOptions;
 // var scpOptions = ["picxenk@192.168.0.17:./MPScreenServer/MPCams/1/"];
 // var scpOptions = ["picxenk@222.121.149.230:./MPScreenServer/MPCams/1/"];
 var scpOptions = [config.MPScreenServerUser+"@"
-    +config.MPScreenServerIP
+    +config.MPScreenServerIP+":"
     +"./MPScreenServer/MPCams/"
     +config.MPCamID+"/"];
 
