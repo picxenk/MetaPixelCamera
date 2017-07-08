@@ -1,5 +1,6 @@
 var config = require('./config');
 
+
 var Gpio = require('onoff').Gpio;
 var button = new Gpio(5, 'in', 'both');
 var button2 = new Gpio(6, 'in', 'both');
@@ -7,12 +8,21 @@ var spawn = require('child_process').spawn;
 var exec  = require('child_process').exec;
 var dateFormat = require('dateformat');
 
+
+// for phantomjs
+var path = require('path');
+var childProcess = require('child_process');
+var phantomjs = require('phantomjs2');
+var binPath = phantomjs.path;
+
+
 var state = 'READY';
 var camOptions = config.camOptions;
 var scpOptions = [config.MPScreenServerUser+"@"
     +config.MPScreenServerIP+":"
     +"./MPScreenServer/MPCams/"
     +config.MPCamID+"/"];
+
 
 button.watch(function(err, value) {
     var fileName;
