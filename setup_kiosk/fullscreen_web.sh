@@ -10,6 +10,6 @@ chromium-browser \
     --start-maximized \
     --noerrdialogs \
     --incognito \
-    --kiosk "http://2langs.protoroom.kr" &
+    --kiosk "http://localhost/kiosk.html" &
 sleep 5
 xdotool search --sync --onlyvisible --class "chromium" key F11
