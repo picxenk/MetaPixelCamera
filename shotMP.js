@@ -58,20 +58,60 @@ button.watch(function(err, value) {
         isShutterOpen = true;
         isProcessing = true;
 
-        fileName = "./public_html/img/"+makeTimeString()+".jpg";
-        shotProc = spawn('raspistill', camOptions.concat(fileName));
-        console.log('cam done '+fileName);
+        var timeStamp = makeTimeString();
+        fileName = timeStamp+".png";
+        mpFileName = timeStamp+"_mp.png";
+        filePath = "./public_html/img/"+fileName;
+        mpFilePath = "./public_html/img/"+mpFileName;
+        shotProc = spawn('raspistill', camOptions.concat(filePath));
+        console.log('cam done '+filePath);
+
 
         shotProc.on('close', (code) => {
-            exec("scp "+fileName+" "+scpOptions[0], (err, sto, ste) => {
-                if (err) {
-                    console.error(`${err}`);
-                    return;
-                }
+            var args = [
+                path.join(__dirname, 'renderMP.js'),
+                fileName,
+                mpFileName
+            ]
+
+            var mpProc = spawn(binPath, args);
+            mpProc.on('close', (code) => {
+                exec("scp "+mpFilePath+" "+scpOptions[0], (err, sto, ste) => {
+                    if (err) {
+                        console.error(`${err}`);
+                        return;
+                    }
+                });
+                console.log('scp done '+mpFilePath);
+                isProcessing = false;
             });
-            // console.log('scp done '+fileName);
-            isProcessing = false;
+
+            // childProcess.execFile(binPath, args, (err, sto, ste) => {
+            //     if (err) {
+            //         console.error(`${err}`);
+            //         return;
+            //     }
+            //     exec("scp "+mpFilePath+" "+scpOptions[0], (err, sto, ste) => {
+            //         if (err) {
+            //             console.error(`${err}`);
+            //             return;
+            //         }
+            //     });
+            //     console.log('scp done '+mpFilePath);
+            //     isProcessing = false;
+            // });
         });
+
+        // shotProc.on('close', (code) => {
+        //     exec("scp "+fileName+" "+scpOptions[0], (err, sto, ste) => {
+        //         if (err) {
+        //             console.error(`${err}`);
+        //             return;
+        //         }
+        //     });
+        //     console.log('scp done '+fileName);
+        //     isProcessing = false;
+        // });
 
     }
 
