@@ -24,7 +24,7 @@ var preload = function() {
     if (fileName) {
         img = loadImage("/img/"+fileName);
     } else {
-        img = loadImage("frogcam_540.jpg");
+        img = loadImage("frogcam_270.jpg_test");
     }
 }
 
@@ -36,8 +36,8 @@ var setup = function() {
     background(0);
     mpi = new MPImage(img);
     mpi.updateMetaPixels();
-    // mpi.do02();
-    mpi.do01();
+    mpi.do02();
+    // mpi.do01();
     mpi.processMPImage();
     image(mpi.pg, 0, 0);
 }
