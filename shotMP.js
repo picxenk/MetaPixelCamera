@@ -1,6 +1,12 @@
 var config = require('./config');
 
+// for websocket
+var io = require('socket.io').listen(8080);
+io.on('connection', (soc) => {
+    console.log('connected: '+soc);
+});
 
+// for buttons
 var Gpio = require('onoff').Gpio;
 var buttonOptions = { persistentWatch: true, debounceTimeout: 50};
 var button = new Gpio(5, 'in', 'both', buttonOptions); // for shotting
@@ -43,6 +49,7 @@ button.watch(function(err, value) {
     if (state == 'READY' && oButtonValue == -1 && cButtonValue == 0) {
         state = 'SHOT';
         oButtonValue = 0;
+        io.emit('shot', { time: Date.now() });
     }
     if (state == 'SHOT' && oButtonValue == 0 && cButtonValue == 1) {
         state = 'RELEASE';
@@ -83,6 +90,7 @@ button.watch(function(err, value) {
                     }
                 });
                 console.log('scp done '+mpFilePath);
+                io.emit('scp_done', { time: Date.now() });
                 isProcessing = false;
             });
 
