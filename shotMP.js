@@ -145,3 +145,11 @@ var makeTimeString = function() {
     return dateFormat(new Date(), "yyyymmdd-HH_MM_ssl");
 }
 
+var shotPreview = function() {
+    var previewProc;
+    if (!isProcessing) {
+        previewProc = spawn('raspistill', config.previewOptions);
+    }
+}
+
+setInterval(shotPreview, 2000);
