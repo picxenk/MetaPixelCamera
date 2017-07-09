@@ -1,0 +1,10 @@
+# setup shotMP.js for RPi Servie
+http://www.instructables.com/id/Nodejs-App-As-a-RPI-Service-boot-at-Startup/
+
+ - sudo npm install forever -g
+ - cp shot-mp to /etc/init.d/
+ - chmod 755 shot-mp
+ - update-rc.d shot-mp defaults
+
+
+

@@ -5,6 +5,19 @@ var io = require('socket.io').listen(8080);
 io.on('connection', (soc) => {
     console.log('connected: '+soc);
 });
+// var WebSocketClient = require('websocket').client;
+// var client = new WebSocketClient();
+// client.connect('ws://'+config.MPScreenServerIP+':8080/screenserver');
+// var W3CWebSocket = require('websocket').w3cwebsocket;
+// var client = new W3CWebSocket('ws://'+config.MPScreenServerIP+':8888/screenserver', 'echo-protocol');
+// client.onerror = function() {
+//     console.log('websocket error');
+// }
+var WebSocket = require('ws');
+var client = new WebSocket('ws://'+config.MPScreenServerIP+':8080/screenserver');
+client.on('error', (err) => {
+    console.log('ws error: '+ err.code);
+});
 
 // for buttons
 var Gpio = require('onoff').Gpio;
@@ -49,7 +62,6 @@ button.watch(function(err, value) {
     if (state == 'READY' && oButtonValue == -1 && cButtonValue == 0) {
         state = 'SHOT';
         oButtonValue = 0;
-        io.emit('shot', { time: Date.now() });
     }
     if (state == 'SHOT' && oButtonValue == 0 && cButtonValue == 1) {
         state = 'RELEASE';
@@ -62,6 +74,8 @@ button.watch(function(err, value) {
     
     if (state == 'SHOT' && !isProcessing) {
         console.log('==================================CHAL');
+        io.emit('shot', { time: Date.now() });
+        client.send('shot');
         isShutterOpen = true;
         isProcessing = true;
 
