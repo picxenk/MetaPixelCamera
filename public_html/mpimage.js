@@ -66,8 +66,9 @@ var MPImage = function(anImage) {
             var p = this.mps[i];
             if (p.r > p.g) {
                 p.beStrong(15);
+                p.moveDown(p.r*0.3);
             } else {
-                p.moveRandom(100);
+                p.moveRandom(p.r*0.5);
             }
         }
     }
