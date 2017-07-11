@@ -98,16 +98,24 @@ button.watch(function(err, value) {
             // var mpProc = spawn(binPath, args);
             var mpProc = spawn('node', [path.join(__dirname, 'renderMPCanvas.js'), fileName]);
             mpProc.on('close', (code) => {
-                exec("scp "+mpFilePath+" "+scpOptions[0], (err, sto, ste) => {
-                    if (err) {
-                        console.error(`${err}`);
-                        return;
-                    }
+                var scpProc = spawn('scp', [mpFilePath, scpOptions[0]]);
+                scpProc.on('close', (c) => {
+                    console.log('scp done '+mpFilePath);
+                    io.emit('scp_done', { time: Date.now() });
+                    client.send(makeWSData('send'));
+                    isProcessing = false;
                 });
-                console.log('scp done '+mpFilePath);
-                io.emit('scp_done', { time: Date.now() });
-                client.send(makeWSData('send'));
-                isProcessing = false;
+
+                // exec("scp "+mpFilePath+" "+scpOptions[0], (err, sto, ste) => {
+                //     if (err) {
+                //         console.error(`${err}`);
+                //         return;
+                //     }
+                // });
+                // console.log('scp done '+mpFilePath);
+                // io.emit('scp_done', { time: Date.now() });
+                // client.send(makeWSData('send'));
+                // isProcessing = false;
             });
 
             // childProcess.execFile(binPath, args, (err, sto, ste) => {
@@ -143,6 +151,7 @@ button.watch(function(err, value) {
         if (isShutterOpen) {
             console.log('==================================KHACK!');
             isShutterOpen = false;
+            client.send(makeWSData('release'));
         }
         oButtonValue = -1;
         state = 'READY';

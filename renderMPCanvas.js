@@ -44,7 +44,7 @@ mpi.do02();
 mpi.processMPImage();
 
 var out = fs.createWriteStream(__dirname + '/public_html/img/' + renderedImageFile);
-var stream = mpi.canvas.jpegStream();
+var stream = mpi.canvas.pngStream();
 
 stream.on('data', function(chunk){
       out.write(chunk);

@@ -33,17 +33,15 @@ var MPImage = function(anImage, aWidth, aHeight) {
 
 
     this.processMPImage = function() {
-        // this.pg.noStroke();
-        // this.pg.background(255);
+        this.ctx.fillStyle = 'rgba(255, 255, 255, 255)';
+        this.ctx.fillRect(0, 0, this.w, this.h);
 
-        for (var i=0; i<this.mps.length; i++) {
+        // for (var i=0; i<this.mps.length; i++) {
+        //     this.mps[i].displayOn(this.ctx);
+        // }
+        for (var i=this.mps.length-1; i>=0; i--) {
             this.mps[i].displayOn(this.ctx);
         }
-        // for (var i=this.mps.length-1; i>=0; i--) {
-        //     this.mps[i].displayOn(this.ctx, this.ctxData);
-        // }
-        // this.ctx.putImageData(this.ctxData, 0, 0);
-        // this.ctx.restore();
 
     }
 
