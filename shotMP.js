@@ -47,6 +47,7 @@ var state = 'READY';
 var oButtonValue = -1;
 var cButtonValue = -1;
 var isProcessing = false;
+var isPreviewShot = false;
 var isShutterOpen = false;
 
 button.watch(function(err, value) {
@@ -71,7 +72,7 @@ button.watch(function(err, value) {
     console.log(value);
 
     
-    if (state == 'SHOT' && !isProcessing) {
+    if (state == 'SHOT' && !isProcessing && !isPreviewShot) {
         console.log('==================================CHAL');
         io.emit('shot', { time: Date.now() });
         client.send(makeWSData('shot'));
@@ -94,7 +95,8 @@ button.watch(function(err, value) {
                 mpFileName
             ]
 
-            var mpProc = spawn(binPath, args);
+            // var mpProc = spawn(binPath, args);
+            var mpProc = spawn('node', [path.join(__dirname, 'renderMPCanvas.js'), fileName]);
             mpProc.on('close', (code) => {
                 exec("scp "+mpFilePath+" "+scpOptions[0], (err, sto, ste) => {
                     if (err) {
@@ -170,7 +172,12 @@ var makeTimeString = function() {
 var shotPreview = function() {
     var previewProc;
     if (!isProcessing) {
+        isPreviewShot = true;
         previewProc = spawn('raspistill', config.previewOptions);
+
+        previewProc.on('close', (code) => {
+            isPreviewShot = false;
+        });
     }
 }
 
