@@ -1,9 +1,9 @@
 var config = {};
 config.MPCamID = 1;
-config.MPScreenServerIP = '222.121.149.230';
+config.MPScreenServerIP = '192.168.0.100';
 config.MPScreenServerUser = 'picxenk';
-config.camWidth = 640; //480, 640, 960, 1920
-config.camHeight = 360; //270, 360, 540, 1080
+config.camWidth = 864; //480, 640, 864, 960, 1920
+config.camHeight = 486; //270, 360, 486, 540, 1080
 
 config.camOptions = ["-rot", "90", 
 	"-w", config.camWidth, "-h", config.camHeight, 
