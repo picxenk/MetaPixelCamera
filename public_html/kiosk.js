@@ -2,6 +2,15 @@ var previewFile;
 var previewImage; 
 var socket;
 var isProcessing = false;
+var splashColor = [
+    [255, 50, 50],
+    [50, 255, 50],
+    [50, 50, 255],
+    [255, 255, 50],
+    [255, 50, 255],
+    [50, 255, 255]
+];
+var n=0;
 
 var setup = function() {
     createCanvas(displayWidth, displayHeight);
@@ -32,8 +41,9 @@ var setup = function() {
 
 var draw = function() {
     if (isProcessing) {
-        fill(250, 250, 50);
-        rect(0, 0, displayWidth, displayHeight);
+        showCodeSplash(n);
+        n++;
+        if (n >= splashColor.length) n = 0;
     } else {
         previewFile = "/preview.jpg?"+Date.now();
         updatePreview();
@@ -41,6 +51,11 @@ var draw = function() {
     }
 }
 
+
+var showCodeSplash = function(n) {
+    fill(splashColor[n][0], splashColor[n][1], splashColor[n][2]);
+    rect(0, 0, displayWidth, displayHeight);
+}
 
 var updatePreview = function() {
     loadImage(previewFile, 
