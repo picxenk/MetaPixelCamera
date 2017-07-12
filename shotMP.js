@@ -20,19 +20,22 @@ var makeWSData = function(m) {
 
 // for buttons
 var Gpio = require('onoff').Gpio;
-var buttonOptions = { persistentWatch: true, debounceTimeout: 50};
+// var buttonOptions = { persistentWatch: true, debounceTimeout: 50};
+var buttonOptions = { debounceTimeout: 30};
 var button = new Gpio(5, 'in', 'both', buttonOptions); // for shotting
 var button2 = new Gpio(6, 'in', 'both', buttonOptions); // for extra
+
+// common
 var spawn = require('child_process').spawn;
 var exec  = require('child_process').exec;
 var dateFormat = require('dateformat');
-
-
-// for phantomjs
 var path = require('path');
-var childProcess = require('child_process');
-var phantomjs = require('phantomjs2');
-var binPath = phantomjs.path;
+var waitUntil = require('wait-until');
+
+// for phantomjs - deprecated
+// var childProcess = require('child_process');
+// var phantomjs = require('phantomjs2');
+// var binPath = phantomjs.path;
 
 
 var camOptions = config.camOptions;
@@ -49,6 +52,13 @@ var cButtonValue = -1;
 var isProcessing = false;
 var isPreviewShot = false;
 var isShutterOpen = false;
+
+var isDebugging = true;
+function debug() {
+    if (isDebugging) {
+        console.log('state:'+state+' isProcessing:'+isProcessing+' isPreviewShot:'+isPreviewShot);
+    }
+}
 
 button.watch(function(err, value) {
     var fileName;
@@ -70,12 +80,13 @@ button.watch(function(err, value) {
 
 
     console.log(value);
+    debug();
 
     
-    if (state == 'SHOT' && !isProcessing && !isPreviewShot) {
+    if (state == 'SHOT' && !isProcessing) {
         console.log('==================================CHAL');
         io.emit('shot', { time: Date.now() });
-        client.send(makeWSData('shot'));
+        client.send(makeWSData('shot'), (err) => { console.log(err); });
         isShutterOpen = true;
         isProcessing = true;
 
@@ -84,74 +95,43 @@ button.watch(function(err, value) {
         mpFileName = timeStamp+"_mp.png";
         filePath = "./public_html/img/"+fileName;
         mpFilePath = "./public_html/img/"+mpFileName;
-        shotProc = spawn('raspistill', camOptions.concat(filePath));
-        console.log('cam done '+filePath);
 
 
-        shotProc.on('close', (code) => {
-            var args = [
-                path.join(__dirname, 'renderMP.js'),
-                fileName,
-                mpFileName
-            ]
+        waitUntil()
+            .interval(100)
+            .times(20)
+            .condition(function() {
+                return (!isPreviewShot ? true : false);
+            })
+            .done(function(result) {
+                shotProc = spawn('raspistill', camOptions.concat(filePath));
+                console.log('cam done '+filePath);
+                shotProc.on('exit', (code) => {
+                    var args = [
+                        path.join(__dirname, 'renderMP.js'),
+                        fileName,
+                        mpFileName
+                    ]
 
-            // var mpProc = spawn(binPath, args);
-            var mpProc = spawn('node', [path.join(__dirname, 'renderMPCanvas.js'), fileName]);
-            mpProc.on('close', (code) => {
-                var scpProc = spawn('scp', [mpFilePath, scpOptions[0]]);
-                scpProc.on('close', (c) => {
-                    console.log('scp done '+mpFilePath);
-                    io.emit('scp_done', { time: Date.now() });
-                    client.send(makeWSData('send'));
-                    isProcessing = false;
+                    var mpProc = spawn('node', [path.join(__dirname, 'renderMPCanvas.js'), fileName]);
+                    mpProc.on('exit', (code) => {
+                        var scpProc = spawn('scp', [mpFilePath, scpOptions[0]]);
+                        scpProc.on('close', (c) => {
+                            console.log('scp done '+mpFilePath);
+                            io.emit('scp_done', { time: Date.now() });
+                            client.send(makeWSData('send'), (err) => { console.log(err); });
+                            isProcessing = false;
+                        });
+                    });
                 });
-
-                // exec("scp "+mpFilePath+" "+scpOptions[0], (err, sto, ste) => {
-                //     if (err) {
-                //         console.error(`${err}`);
-                //         return;
-                //     }
-                // });
-                // console.log('scp done '+mpFilePath);
-                // io.emit('scp_done', { time: Date.now() });
-                // client.send(makeWSData('send'));
-                // isProcessing = false;
             });
-
-            // childProcess.execFile(binPath, args, (err, sto, ste) => {
-            //     if (err) {
-            //         console.error(`${err}`);
-            //         return;
-            //     }
-            //     exec("scp "+mpFilePath+" "+scpOptions[0], (err, sto, ste) => {
-            //         if (err) {
-            //             console.error(`${err}`);
-            //             return;
-            //         }
-            //     });
-            //     console.log('scp done '+mpFilePath);
-            //     isProcessing = false;
-            // });
-        });
-
-        // shotProc.on('close', (code) => {
-        //     exec("scp "+fileName+" "+scpOptions[0], (err, sto, ste) => {
-        //         if (err) {
-        //             console.error(`${err}`);
-        //             return;
-        //         }
-        //     });
-        //     console.log('scp done '+fileName);
-        //     isProcessing = false;
-        // });
-
     }
 
     if (state == 'RELEASE') {
         if (isShutterOpen) {
             console.log('==================================KHACK!');
             isShutterOpen = false;
-            client.send(makeWSData('release'));
+            // client.send(makeWSData('release'));
         }
         oButtonValue = -1;
         state = 'READY';
@@ -184,10 +164,10 @@ var shotPreview = function() {
         isPreviewShot = true;
         previewProc = spawn('raspistill', config.previewOptions);
 
-        previewProc.on('close', (code) => {
+        previewProc.on('exit', (code) => {
             isPreviewShot = false;
         });
     }
 }
 
-setInterval(shotPreview, 2000);
+setInterval(shotPreview, 3000);
