@@ -1,6 +1,7 @@
 var config = require('./config');
 
 var fs = require('fs');
+var vm = require('vm');
 var Canvas = require('canvas');
 var Image = Canvas.Image;
 
@@ -17,6 +18,18 @@ var timeStamp = function(m) {
     var n = time.time() - t;
     console.log(m + " : " + n);
 }
+
+
+var includeInThisContext = function (path) {
+    var code = fs.readFileSync(__dirname + '/' + path, {encoding: 'utf-8'});
+    vm.runInThisContext(code, path);
+}.bind(this);
+
+var evalCode = function(path) {
+    var code = fs.readFileSync(__dirname + '/' + path, {encoding: 'utf-8'});
+    eval(code);
+}
+
 
 var imageFile;
 var renderedImageFile;
@@ -40,7 +53,9 @@ var imageData = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
 var mpi = new MPImage(imageData.data, img.width, img.height);
 mpi.updateMetaPixels();
 // MetaPixel Language Process
-mpi.do02();
+var 메타픽셀은 = mpi;
+// includeInThisContext('public_html/code.js');
+evalCode('public_html/code.js');
 mpi.processMPImage();
 
 var out = fs.createWriteStream(__dirname + '/public_html/img/' + renderedImageFile);

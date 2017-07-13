@@ -55,6 +55,7 @@ var MPImage = function(anImage, aWidth, aHeight) {
             }
         }
     }
+    this.흘러라 = this.do01;
 
     this.do02 = function() {
         for (var i=0; i<this.mps.length; i++) {
@@ -68,6 +69,7 @@ var MPImage = function(anImage, aWidth, aHeight) {
             }
         }
     }
+    this.흘러내린다 = this.do02;
 }
 
 module.exports = MPImage;

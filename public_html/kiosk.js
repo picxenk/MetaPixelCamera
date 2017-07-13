@@ -10,7 +10,20 @@ var splashColor = [
     [255, 50, 255],
     [50, 255, 255]
 ];
+var splashTextColor = [
+    [50, 255, 255],
+    [255, 50, 255],
+    [255, 255, 50],
+    [50, 50, 255],
+    [50, 255, 50],
+    [255, 50, 50]
+];
 var n=0;
+
+var code;
+var preload() {
+    code = loadStrings('code.js');
+}
 
 var setup = function() {
     createCanvas(displayWidth, displayHeight);
@@ -55,6 +68,8 @@ var draw = function() {
 var showCodeSplash = function(n) {
     fill(splashColor[n][0], splashColor[n][1], splashColor[n][2]);
     rect(0, 0, displayWidth, displayHeight);
+    fill(splashTextColor[n][0], splashTextColor[n][1], splashTextColor[n][2]);
+    text(code, 10, 10, width-10, height-10);
 }
 
 var updatePreview = function() {
