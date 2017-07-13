@@ -6,9 +6,14 @@ io.on('connection', (soc) => {
     console.log('connected: '+soc);
 });
 var WebSocket = require('ws');
-var client = new WebSocket('ws://'+config.MPScreenServerIP+':8080/screenserver');
+var connectScreenServerWS = function() {
+    return new WebSocket('ws://'+config.MPScreenServerIP+':8080/screenserver');
+}
+// var client = new WebSocket('ws://'+config.MPScreenServerIP+':8080/screenserver');
+var client = connectScreenServerWS();
 client.on('error', (err) => {
-    console.log('ws error: '+ err.code);
+    console.log('ws error: '+ err.code + ' ... reconnect');
+    process.exit();
 });
 var makeWSData = function(m) {
     var data = {
@@ -86,7 +91,7 @@ button.watch(function(err, value) {
     if (state == 'SHOT' && !isProcessing) {
         console.log('==================================CHAL');
         io.emit('shot', { time: Date.now() });
-        client.send(makeWSData('shot'), (err) => { console.log(err); });
+        client.send(makeWSData('shot'), (err) => { if (err) console.log(err); });
         isShutterOpen = true;
         isProcessing = true;
 
@@ -119,7 +124,7 @@ button.watch(function(err, value) {
                         scpProc.on('close', (c) => {
                             console.log('scp done '+mpFilePath);
                             io.emit('scp_done', { time: Date.now() });
-                            client.send(makeWSData('send'), (err) => { console.log(err); });
+                            client.send(makeWSData('send'), (err) => { if (err) console.log(err); });
                             isProcessing = false;
                         });
                     });
@@ -170,4 +175,9 @@ var shotPreview = function() {
     }
 }
 
+var heartbeat = function() {
+    client.send(makeWSData('live'), (err) => { if (err) console.log('heartbeat fail: '+err); });
+}
+
 setInterval(shotPreview, 3000);
+setInterval(heartbeat, 60000);
