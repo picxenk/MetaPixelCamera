@@ -73,9 +73,9 @@ var draw = function() {
         text(message, 10, 10);
     } else {
         if (isProcessing) {
-            // if (frameCount % 2 == 0) {
+            if (frameCount % 2 == 0) {
                 showCodeSplash();
-            // }
+            }
         } else {
             if (frameCount % 10 == 0) {
                 txtIndex = 0;
