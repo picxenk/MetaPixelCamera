@@ -20,16 +20,31 @@ var splashTextColor = [
 ];
 var n=0;
 
-var code;
-var preload() {
-    code = loadStrings('code.js');
+var message = "";
+var isError = false;
+var isDebugging = false;
+
+var font;
+var code, codeStrings;
+var txtIndex = 0;
+var preload = function() {
+    font = loadFont('D2Coding.ttf');
+    codeStrings = loadStrings('code.js',
+            (string) => {
+                // text("loading code", 10, 10);
+                code = codeStrings.join(' ');
+            },
+            (err) => {
+                isError = true;
+                message = "check code file";
+            });
 }
 
 var setup = function() {
     createCanvas(displayWidth, displayHeight);
     previewImage = createImage(320, 480);
     // noLoop();
-    frameRate(1);
+    frameRate(10);
     noCursor();
 
 
@@ -53,23 +68,43 @@ var setup = function() {
 
 
 var draw = function() {
-    if (isProcessing) {
-        showCodeSplash(n);
-        n++;
-        if (n >= splashColor.length) n = 0;
+    if (isError) {
+        fill(255, 0, 0);
+        text(message, 10, 10);
     } else {
-        previewFile = "/preview.jpg?"+Date.now();
-        updatePreview();
-        image(previewImage, 0, 0);
+        if (isProcessing) {
+            // if (frameCount % 2 == 0) {
+                showCodeSplash();
+            // }
+        } else {
+            if (frameCount % 10 == 0) {
+                txtIndex = 0;
+                previewFile = "/preview.jpg?"+Date.now();
+                updatePreview();
+                image(previewImage, 0, 0);
+            }
+        }
     }
+
 }
 
 
-var showCodeSplash = function(n) {
+var showCodeSplash = function() {
     fill(splashColor[n][0], splashColor[n][1], splashColor[n][2]);
     rect(0, 0, displayWidth, displayHeight);
+
+    var codeToShow = code.slice(0, txtIndex);
     fill(splashTextColor[n][0], splashTextColor[n][1], splashTextColor[n][2]);
-    text(code, 10, 10, width-10, height-10);
+    textFont(font);
+    textSize(40);
+    text(codeToShow, 10, 10, width-10, height-10);
+    txtIndex++;
+
+    if (txtIndex >= code.length) {
+        txtIndex = 0;
+        n++;
+        if (n >= splashColor.length) n = 0;
+    }
 }
 
 var updatePreview = function() {
