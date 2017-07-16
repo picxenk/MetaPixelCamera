@@ -1,4 +1,21 @@
-# setup shotMP.js for RPi Servie
+# setup shotmp with forever-service
+ - https://github.com/zapty/forever-service
+
+
+ sudo forever-service install shotmp -s shotMP.js 
+ forever-service version 0.5.10
+
+Commands to interact with service shotmp
+Start   - "sudo service shotmp start"
+Stop    - "sudo service shotmp stop"
+Status  - "sudo service shotmp status"
+Restart - "sudo service shotmp restart"
+
+
+
+-----
+# XXX : Old way
+## setup shotMP.js for RPi Servie
 http://www.instructables.com/id/Nodejs-App-As-a-RPI-Service-boot-at-Startup/
 
  - sudo npm install forever -g
