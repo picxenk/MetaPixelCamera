@@ -15,6 +15,8 @@ var canvasWidth  = canvas.width;
 var canvasHeight = canvas.height;
 var ctx = canvas.getContext('2d');
 var ctx2 = canvas2.getContext('2d');
+ctx2.fillStyle = 'rgba(255, 255, 255, 255)';
+ctx2.fillRect(0, 0, canvasWidth, canvasHeight);
 
 var timeStamp = function(m) {
     var n = time.time() - t;
@@ -63,6 +65,10 @@ for (var i=0; i<w; i++) {
         var b = img[off+2];
         var a = img[off+3];
         var mp = new MetaPixel(i, j, r, g, b, a);
+        var 픽셀은 = mp;
+        var 픽셀의 = mp;
+        var 픽셀이여 = mp;
+        var 너의 = mp;
 
         // evalCode('public_html/code.js');
         if (r > g) {

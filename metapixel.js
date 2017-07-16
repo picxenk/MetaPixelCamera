@@ -10,6 +10,8 @@ var MetaPixel = function(px, py, pr, pg, pb, pa) {
     this.b = pb;
     this.a = pa;
 
+    this.isDoing = true;
+
 
     this.toColor = function(r, g, b, a) {
         return 'rgba('
@@ -93,6 +95,41 @@ var MetaPixel = function(px, py, pr, pg, pb, pa) {
     }
     this.randInt = function(min, max) {
         return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
+    this.붉은만큼 = this.r * 0.3;
+    this.붉다면 = function() {
+        if (this.r > this.g) {
+            this.isDoing = true;
+        } else {
+            this.isDoing = false;
+        }
+        return this;
+    }
+    this.그렇지않다면 = function() {
+        this.isDoing = !this.isDoing;
+        return this;
+    }
+
+    this.강해져라 = function() {
+        if (this.isDoing) {
+            this.beStrong(15);
+        }
+        return this;
+    }
+
+    this.흘러내려라 = function(v) {
+        if (this.isDoing) {
+            this.moveDown(v);
+        }
+        return this;
+    }
+
+    this.흩어져라 = function() {
+        if (this.isDoing) {
+            this.moveRandom(this.r*0.5);
+        }
+        return this;
     }
 }
 

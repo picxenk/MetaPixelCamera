@@ -1,2 +1,14 @@
-메타픽셀은
- .흘러내린다()
+// for kiosk
+픽셀이여
+.붉다면()
+.강해져라()
+.흘러내려라( 너의.붉은만큼 )
+.그렇지않다면()
+.흩어져라()
+// //// raw code for speed
+// if (r > g) {
+//     mp.beStrong(15);
+//     mp.moveDown(r*0.3);
+// } else {
+//     mp.moveRandom(r*0.5);
+// }
