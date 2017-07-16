@@ -98,8 +98,8 @@ button.watch(function(err, value) {
         var timeStamp = makeTimeString();
         fileName = timeStamp+".png";
         mpFileName = timeStamp+"_mp.png";
-        filePath = "./public_html/img/"+fileName;
-        mpFilePath = "./public_html/img/"+mpFileName;
+        filePath = path.join(__dirname, "public_html/img/"+fileName);
+        mpFilePath = path.join(__dirname, "public_html/img/"+mpFileName);
 
 
         waitUntil()
@@ -112,13 +112,13 @@ button.watch(function(err, value) {
                 shotProc = spawn('raspistill', camOptions.concat(filePath));
                 console.log('cam done '+filePath);
                 shotProc.on('exit', (code) => {
-                    var args = [
-                        path.join(__dirname, 'renderMP.js'),
-                        fileName,
-                        mpFileName
-                    ]
+                    // var args = [
+                    //     path.join(__dirname, 'renderMP.js'),
+                    //     fileName,
+                    //     mpFileName
+                    // ]
 
-                    var mpProc = spawn('node', [path.join(__dirname, 'renderMPCanvas.js'), fileName]);
+                    var mpProc = spawn('node', [path.join(__dirname, 'renderMPCanvas2.js'), fileName]);
                     mpProc.on('exit', (code) => {
                         var scpProc = spawn('scp', [mpFilePath, scpOptions[0]]);
                         scpProc.on('close', (c) => {
