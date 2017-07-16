@@ -20,7 +20,7 @@ var timeStamp = function(m) {
 
 // read original image
 var img;
-var fileName = 'andy_360.jpg';
+var fileName = 'andy_540.jpg';
 var imgFile = fs.readFileSync(__dirname + '/' + fileName);
 // var imgFile = fs.readFileSync(__dirname + '/' + 'andy.jpg');
 img = new Image;

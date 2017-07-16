@@ -24,7 +24,7 @@ timeStamp('start');
 // read original image
 var img;
 // var fileName = 'frogcam_270.jpg';
-var fileName = 'frogcam_540.jpg';
+var fileName = 'andy_540.jpg';
 // var fileName = 'andy.jpg';
 var imgFile = fs.readFileSync(__dirname + '/' + fileName);
 // var imgFile = fs.readFileSync(__dirname + '/' + 'andy.jpg');
@@ -75,7 +75,7 @@ console.log(mpi.mps.length);
 // imageData.data.set(buf8);
 // ctx.putImageData(imageData, 0, 0);
 //
-var out = fs.createWriteStream(__dirname + '/mp_' + fileName);
+var out = fs.createWriteStream(__dirname + '/mp_old_' + fileName);
 var stream = mpi.canvas.pngStream();
 // var stream = canvasOut.pngStream();
 
