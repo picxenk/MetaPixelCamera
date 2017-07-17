@@ -70,6 +70,7 @@ for (var i=0; i<w; i++) {
         var 픽셀이여 = mp;
         var 너의 = mp;
 
+        // run raw code for performance
         // evalCode('public_html/code.js');
         if (r > g) {
             mp.beStrong(15);
@@ -77,6 +78,7 @@ for (var i=0; i<w; i++) {
         } else {
             mp.moveRandom(r*0.5);
         }
+        // eval code end
 
         mp.displayOn(ctx2);
     }

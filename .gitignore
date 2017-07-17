@@ -60,6 +60,7 @@ typings/
 # MetaPixelCamera ignore
 config.js
 code.js
+code_kiosk.js
 *.jpg
 *.png
 *.jpg~
