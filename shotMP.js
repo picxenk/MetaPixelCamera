@@ -1,5 +1,12 @@
 var config = require('./config');
 
+// common
+var spawn = require('child_process').spawn;
+var exec  = require('child_process').exec;
+var dateFormat = require('dateformat');
+var path = require('path');
+var waitUntil = require('wait-until');
+
 // for websocket
 var io = require('socket.io').listen(8080);
 io.on('connection', (soc) => {
@@ -14,6 +21,17 @@ var client = connectScreenServerWS();
 client.on('error', (err) => {
     console.log('ws error: '+ err.code + ' ... reconnect');
     process.exit();
+});
+client.on('message', (msg) => {
+    console.log(msg);
+    if (msg == 'turnoff') {
+        exec("sudo shutdown now", (err, sto, ste) => {
+            if (err) {
+                console.error(`${err}`);
+                return;
+            }
+        });
+    }
 });
 var makeWSData = function(m) {
     var data = {
@@ -30,12 +48,6 @@ var buttonOptions = { debounceTimeout: 30};
 var button = new Gpio(5, 'in', 'both', buttonOptions); // for shotting
 var button2 = new Gpio(6, 'in', 'both', buttonOptions); // for extra
 
-// common
-var spawn = require('child_process').spawn;
-var exec  = require('child_process').exec;
-var dateFormat = require('dateformat');
-var path = require('path');
-var waitUntil = require('wait-until');
 
 // for phantomjs - deprecated
 // var childProcess = require('child_process');
