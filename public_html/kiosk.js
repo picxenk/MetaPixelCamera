@@ -38,7 +38,7 @@ var preload = function() {
     codeStrings = loadStrings('code.js',
             (string) => {
                 // text("loading code", 10, 10);
-                code = codeStrings.join(' ');
+                code = codeStrings.join('\n');
             },
             (err) => {
                 isError = true;
