@@ -44,7 +44,7 @@ var setup = function() {
     createCanvas(displayWidth, displayHeight);
     previewImage = createImage(320, 480);
     // noLoop();
-    frameRate(10);
+    frameRate(20);
     noCursor();
 
 
@@ -73,11 +73,11 @@ var draw = function() {
         text(message, 10, 10);
     } else {
         if (isProcessing) {
-            if (frameCount % 2 == 0) {
+            // if (frameCount % 2 == 0) {
                 showCodeSplash();
-            }
+            // }
         } else {
-            if (frameCount % 10 == 0) {
+            if (frameCount % 40 == 0) {
                 txtIndex = 0;
                 previewFile = "/preview.jpg?"+Date.now();
                 updatePreview();
@@ -96,11 +96,11 @@ var showCodeSplash = function() {
     var codeToShow = code.slice(0, txtIndex);
     fill(splashTextColor[n][0], splashTextColor[n][1], splashTextColor[n][2]);
     textFont(font);
-    textSize(40);
+    textSize(30);
     text(codeToShow, 10, 10, width-10, height-10);
-    txtIndex++;
+    txtIndex = txtIndex+4;
 
-    if (txtIndex >= code.length) {
+    if (txtIndex >= code.length+80) {
         txtIndex = 0;
         n++;
         if (n >= splashColor.length) n = 0;

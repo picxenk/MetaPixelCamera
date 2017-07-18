@@ -72,12 +72,32 @@ for (var i=0; i<w; i++) {
 
         // run raw code for performance
         // evalCode('public_html/code.js');
-        if (r > g) {
-            mp.beStrong(15);
-            mp.moveDown(r*0.3);
-        } else {
-            mp.moveRandom(r*0.5);
+
+        // cam0
+        // if (r > g) {
+        //     mp.beStrong(15);
+        //     mp.moveDown(r*0.3);
+        // } else {
+        //     mp.moveRandom(r*0.5);
+        // }
+
+        // cam1
+        if (r > b) {
+            mp.moveLeft(r*0.05);
+            mp.moveRandom(g*0.01);
+        } else if (b > r) {
+            mp.moveRight(b*0.01);
+            mp.beStrongRandom(g*0.05);
         }
+
+        // cam2
+        // if (r > b) {
+        //     mp.moveLeft(r*0.3);
+        // } else {
+        //     mp.beStrong(2);
+        //     mp.moveDown(mp.random(1, 10));
+        // }
+
         // eval code end
 
         mp.displayOn(ctx2);

@@ -89,6 +89,9 @@ var MetaPixel = function(px, py, pr, pg, pb, pa) {
     this.beStrong = function(n) {
         this.w = this.w + n;
     }
+    this.beStrongRandom = function(n) {
+        this.w = this.w + this.random(0, n);
+    }
 
     this.random = function(min, max) {
         return Math.random() * (max - min) + min;
