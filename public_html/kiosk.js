@@ -2,6 +2,7 @@ var previewFile;
 var previewImage; 
 var socket;
 var isProcessing = false;
+var isWaiting = false;
 var splashColor = [
     [0, 169, 255],
     [50, 210, 50],
@@ -65,6 +66,12 @@ var setup = function() {
     socket.on('scp_done', (data) => {
         isProcessing = false;
     });
+    socket.on('wait', (data) => {
+        isWaiting = true;
+    });
+    socket.on('ready', (data) => {
+        isWaiting = false;
+    });
 
     background(0, 0, 200);
     stroke(200, 0, 0);
@@ -80,7 +87,7 @@ var draw = function() {
         fill(255, 0, 0);
         text(message, 10, 10);
     } else {
-        if (isProcessing) {
+        if (isProcessing && !isWaiting) {
             // if (frameCount % 2 == 0) {
                 var strings = code.slice(0, txtIndex).split('\n');
                 showCodeSplash2(strings);
@@ -98,6 +105,10 @@ var draw = function() {
                 previewFile = "/preview.jpg?"+Date.now();
                 updatePreview();
                 image(previewImage, 0, 0);
+            }
+
+            if (isWaiting) {
+                text("wait...", 10, displayHeight-20);
             }
         }
     }

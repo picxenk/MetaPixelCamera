@@ -44,6 +44,12 @@ client.on('message', (msg) => {
     } else {
         serverStatus = parseInt(msg); // -1:ready, 0~2:camID
         console.log("server status is: "+serverStatus);
+        if (serverStatus > -1 && serverStatus != config.MPCamID){
+            io.emit('wait', { id: serverStatus, time: Date.now() });
+        }
+        if (serverStatus == -1) {
+            io.emit('ready', { id: serverStatus, time: Date.now() });
+        }
     }
 });
 var makeWSData = function(m) {
