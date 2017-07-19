@@ -18,10 +18,20 @@ var connectScreenServerWS = function() {
 }
 // var client = new WebSocket('ws://'+config.MPScreenServerIP+':8080/screenserver');
 var client = connectScreenServerWS();
+
+var heartbeat = function() {
+    client.send(makeWSData('live'), (err) => { if (err) console.log('heartbeat fail: '+err); });
+}
+
+client.on('open', () => {
+    heartbeat();
+});
 client.on('error', (err) => {
     console.log('ws error: '+ err.code + ' ... reconnect');
     process.exit();
 });
+
+var serverStatus = -1;
 client.on('message', (msg) => {
     console.log(msg);
     if (msg == 'turnoff') {
@@ -31,6 +41,9 @@ client.on('message', (msg) => {
                 return;
             }
         });
+    } else {
+        serverStatus = parseInt(msg); // -1:ready, 0~2:camID
+        console.log("server status is: "+serverStatus);
     }
 });
 var makeWSData = function(m) {
@@ -100,7 +113,7 @@ button.watch(function(err, value) {
     debug();
 
     
-    if (state == 'SHOT' && !isProcessing) {
+    if (state == 'SHOT' && !isProcessing && serverStatus == -1) {
         console.log('==================================CHAL');
         io.emit('shot', { time: Date.now() });
         client.send(makeWSData('shot'), (err) => { if (err) console.log(err); });
@@ -187,9 +200,6 @@ var shotPreview = function() {
     }
 }
 
-var heartbeat = function() {
-    client.send(makeWSData('live'), (err) => { if (err) console.log('heartbeat fail: '+err); });
-}
 
 setInterval(shotPreview, 3000);
 setInterval(heartbeat, 60000);
