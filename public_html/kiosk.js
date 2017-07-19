@@ -78,7 +78,6 @@ var setup = function() {
     line(0, 0, displayWidth, displayHeight);
     line(displayWidth, 0, 0, displayHeight);
 
-    textAlign(LEFT, TOP);
 }
 
 
@@ -108,7 +107,15 @@ var draw = function() {
             }
 
             if (isWaiting) {
-                text("wait...", 10, displayHeight-20);
+                fill(0);
+                noStroke();
+                rect(0, displayHeight/5*2, displayWidth, displayHeight/5);
+                fill(240);
+                textAlign(CENTER, BOTTOM);
+                textFont(font);
+                textSize(20);
+                text("PLEASE, WAIT", displayWidth/2, displayHeight/2);
+                text("Other Camera is working", displayWidth/2, displayHeight/2+30);
             }
         }
     }
@@ -139,6 +146,7 @@ var showCodeSplash2 = function(strings) {
     rect(0, 0, displayWidth, displayHeight);
 
     fill(splashTextColor[n][0], splashTextColor[n][1], splashTextColor[n][2]);
+    textAlign(LEFT, TOP);
     textFont(font);
     textSize(30);
     strokeWeight(0);
