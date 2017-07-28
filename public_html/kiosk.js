@@ -3,6 +3,7 @@ var previewImage;
 var socket;
 var isProcessing = false;
 var isWaiting = false;
+var isInitImage = false;
 var splashColor = [
     [0, 169, 255],
     [50, 210, 50],
@@ -69,8 +70,12 @@ var setup = function() {
     socket.on('wait', (data) => {
         isWaiting = true;
     });
+    socket.on('newinit', (data) => {
+        isInitImage = true;
+    });
     socket.on('ready', (data) => {
         isWaiting = false;
+        isInitImage = false;
     });
 
     background(0, 0, 200);
@@ -86,7 +91,7 @@ var draw = function() {
         fill(255, 0, 0);
         text(message, 10, 10);
     } else {
-        if (isProcessing && !isWaiting) {
+        if (isProcessing && !isWaiting && !isInitImage) {
             // if (frameCount % 2 == 0) {
                 var strings = code.slice(0, txtIndex).split('\n');
                 showCodeSplash2(strings);
@@ -115,7 +120,20 @@ var draw = function() {
                 textFont(font);
                 textSize(20);
                 text("PLEASE, WAIT", displayWidth/2, displayHeight/2);
-                text("Other Camera is working", displayWidth/2, displayHeight/2+30);
+                text("Other Camera is sending", displayWidth/2, displayHeight/2+30);
+                text("messages to 518,400 pixels", displayWidth/2, displayHeight/2+60);
+            }
+
+            if (isInitImage) {
+                fill(30);
+                noStroke();
+                rect(0, 0, displayWidth, displayHeight);
+                fill(240, 240, 0);
+                textAlign(CENTER, BOTTOM);
+                textFont(font);
+                textSize(20);
+                text("Please, Wait", displayWidth/2, displayHeight/2);
+                text("For Next New Image", displayWidth/2, displayHeight/2+30);
             }
         }
     }

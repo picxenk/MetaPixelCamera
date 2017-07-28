@@ -50,6 +50,9 @@ client.on('message', (msg) => {
         if (serverStatus == -1) {
             io.emit('ready', { id: serverStatus, time: Date.now() });
         }
+        if (serverStatus == -2) {
+            io.emit('newinit', { id: serverStatus, time: Date.now() });
+        }
     }
 });
 var makeWSData = function(m) {
