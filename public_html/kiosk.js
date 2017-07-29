@@ -114,7 +114,7 @@ var draw = function() {
             if (isWaiting) {
                 fill(0);
                 noStroke();
-                rect(0, displayHeight/5*2, displayWidth, displayHeight/5);
+                rect(0, displayHeight/5*2, displayWidth, displayHeight/5+30);
                 fill(240);
                 textAlign(CENTER, BOTTOM);
                 textFont(font);
